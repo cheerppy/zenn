@@ -36,7 +36,23 @@ Hello World!           // t = 0.3(ランダム)
 開始1秒後               // t = 1.0
 ハロワ1秒後             // t = 1.3
 ```
-イメージがつかめたら、さっそく作ってみよう
+イメージはつかめただろうか。
+
+## async-await, promise.thenは非同期関数を同期的に使う方法である
+async-await, promise.thenは非同期関数を同期的に使う方法だ。
+例えば、
+```js:example1-discord.js
+function replyOnReacted(message){
+  message.createReactionCollector({filter(reaction){ return reaction === "⭕" }}).on("collect", reaction => {
+  reaction.message.channel.send("good reaction!")
+})
+}
+const message = await channel.send("hello!")
+message.createReactionCollector({filter(reaction){ return reaction === "⭕" }}).on("collect", reaction => {
+  
+})
+```
+
 
 ## 非同期を使わない方法
 技術的には可能（=ゴリゴリ計算すればやってやれんことは無い）。
@@ -75,3 +91,27 @@ setTimeout(()=>{
   },1000);
 }, Math.random()*1000)
 ```
+ちょっとネスト地獄が垣間見える。
+なんなら「[非同期を使わない](#非同期を使わない方法)」方が見やすいまである。
+
+## promise.then
+今回の要件なら一番スマートなのが、thenを使う方法だ。
+```
+function sleepAsync(time){ return new Promise(resolve => setTimeout(resolve, time) }
+// sleepAsync(1000).then(fn) は
+// setTimeout(fn,1000) とおなじ
+
+console.log()
+sleepAsync()
+
+console.log("=== プログラム開始 ===")
+sleep(randomTime)
+console.log("Hello World!")
+sleep(1000 - randomTime)
+console.log("開始一秒後")
+sleep(randomTime + 1000)
+console.log("ハロワ一秒後")
+```
+
+
+
